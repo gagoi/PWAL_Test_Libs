@@ -63,14 +63,21 @@ public class World implements AppElement, GraphicElement, KeyListener {
 					isRunning = false;
 					return;
 				}
-				if (areKeysPressed[0] && canMoove[0]) {
-					if (p.getHitbox().getPos().getValue(0) > 49) p.getHitbox().setPos(new Vec2D(p.getHitbox().getPos().getValue(0) - 34, p.getHitbox().getPos().getValue(1)));
-				}
 				car.getHitbox().setPos(VecUtils.summOf(car.getHitbox().getPos(), car.getHitbox().getSpeed()));
-				if (car.getHitbox().getPos().getValue(1) >= 600)
+				if (car.getHitbox().getPos().getValue(1) >= height)
 					cars.remove(car);
 
 			}
+			
+			//System.out.println("keys: "+areKeysPressed[0]+"-"+areKeysPressed[1]);
+
+			if (areKeysPressed[0])
+				p.getHitbox().setPos(new Vec2D(49, p.getHitbox().getPos().getValue(1)));
+			else if (areKeysPressed[1])
+				p.getHitbox().setPos(new Vec2D(117, p.getHitbox().getPos().getValue(1)));
+			else
+				p.getHitbox().setPos(new Vec2D(83, p.getHitbox().getPos().getValue(1)));
+
 			if (timer % (r.nextInt(50) + 125) == 0) {
 				switch (r.nextInt(6)) {
 				case 0:
@@ -120,29 +127,23 @@ public class World implements AppElement, GraphicElement, KeyListener {
 
 	@Override
 	public void keyTyped(KeyEvent e) {
+		System.out.println(e);
 	}
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+		if (e.getKeyCode() == KeyEvent.VK_LEFT)
 			areKeysPressed[0] = true;
-			canMoove[0] = false;
-		}
-		if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+		if (e.getKeyCode() == KeyEvent.VK_RIGHT)
 			areKeysPressed[1] = true;
-			canMoove[1] = false;
-		}
+
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+		if (e.getKeyCode() == KeyEvent.VK_LEFT)
 			areKeysPressed[0] = false;
-			canMoove[0] = true;
-		}
-		if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+		if (e.getKeyCode() == KeyEvent.VK_RIGHT)
 			areKeysPressed[1] = false;
-			canMoove[1] = true;
-		}
 	}
 }
