@@ -2,6 +2,7 @@ package fr.gagoi.basic_racer;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.util.Random;
 import java.util.Vector;
 
 import fr.gagoi.pwal.app.AppElement;
@@ -14,6 +15,7 @@ public class World implements AppElement, GraphicElement {
 	private int height = 600;
 	private long timer, carID;
 	private Vector<Car> cars = new Vector<>();
+	private Random r = new Random();
 
 	@Override
 	public void render(Graphics g) {
@@ -35,7 +37,7 @@ public class World implements AppElement, GraphicElement {
 			Car car = cars.get(i);
 			g.fillRect((int) (49 + car.getHitbox().getPos().getValue(0) * 34),
 					(int) car.getHitbox().getPos().getValue(1), (int) car.getHitbox().getSize().getValue(0),
-					(int) car.getHitbox().getSize().getValue(0));
+					(int) car.getHitbox().getSize().getValue(1));
 		}
 	}
 
@@ -48,9 +50,39 @@ public class World implements AppElement, GraphicElement {
 				cars.remove(car);
 			}
 		}
-		if (timer % 150 == 0) {
-			cars.add(new Car(carID, new Vec2D(0, 1)));
-			carID++;
+		if (timer % (r.nextInt(50) + 125) == 0) {
+			switch (r.nextInt(6)) {
+			case 0:
+				cars.add(new Car(carID, new Vec2D(0, 0), new Vec2D(0, 1)));
+				carID++;
+				break;
+			case 1:
+				cars.add(new Car(carID, new Vec2D(1, 0), new Vec2D(0, 1)));
+				carID++;
+				break;
+			case 2:
+				cars.add(new Car(carID, new Vec2D(2, 0), new Vec2D(0, 1)));
+				carID++;
+				break;
+			case 3:
+				cars.add(new Car(carID, new Vec2D(0, 0), new Vec2D(0, 1)));
+				carID++;
+				cars.add(new Car(carID, new Vec2D(1, 0), new Vec2D(0, 1)));
+				carID++;
+				break;
+			case 4:
+				cars.add(new Car(carID, new Vec2D(0, 0), new Vec2D(0, 1)));
+				carID++;
+				cars.add(new Car(carID, new Vec2D(2, 0), new Vec2D(0, 1)));
+				carID++;
+				break;
+			case 5:
+				cars.add(new Car(carID, new Vec2D(1, 0), new Vec2D(0, 1)));
+				carID++;
+				cars.add(new Car(carID, new Vec2D(2, 0), new Vec2D(0, 1)));
+				carID++;
+				break;
+			}
 			timer = 0;
 		}
 		timer++;
