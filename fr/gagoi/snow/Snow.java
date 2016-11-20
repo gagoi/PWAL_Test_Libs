@@ -11,7 +11,7 @@ public class Snow implements GraphicElement, AppElement {
 
 	private int[] size;
 	private int posX, posY, speed;
-
+	private boolean isRunning = true;
 	private int timer;
 
 	public Snow() {
@@ -30,13 +30,20 @@ public class Snow implements GraphicElement, AppElement {
 
 	@Override
 	public void update() {
-		if (timer % 2 == 0)
+		if (timer % 2 == 0) {
 			posY += speed;
+			if (posY >= 750) isRunning = false;
+			timer = 0;
+		}
 		timer++;
-		// System.out.println(posY);
 	}
 
 	public int getPosY() {
 		return posY;
+	}
+
+	@Override
+	public boolean isRunning() {
+		return isRunning;
 	}
 }

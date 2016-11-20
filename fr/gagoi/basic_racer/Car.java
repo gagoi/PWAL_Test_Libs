@@ -1,23 +1,28 @@
 package fr.gagoi.basic_racer;
 
-import java.util.Random;
-
-import fr.gagoi.pwal.entities.Entity2D_Rectangle;
+import fr.gagoi.pwal.entities.EntityBase;
+import fr.gagoi.pwal.hitboxes.Hitbox2D_Rectangle;
+import fr.gagoi.pwal.hitboxes.IHitbox;
 import fr.gagoi.pwal.utils.Vec2D;
 
-public class Car extends Entity2D_Rectangle {
-
-	// Les voitures peuvent avoir que 3 positions (0, 1, 2) en X et la position
-	// en Y représente la hauteur à l'écran, une fois sortie de l'ecran on peut
-	// la supprimer.
-	// Elles ont une taille de 25*50.
-	// On peut les traverser, si on le fais on va mourir.
-
+public class Car extends EntityBase {
 	private long id;
 
 	public Car(long carID, Vec2D pos, Vec2D speed) {
-		super("<Car:" + carID + ">", pos, new Vec2D(20, 40), speed, false);
+		super("<Car:" + carID + ">");
+		this.hitbox = new Hitbox2D_Rectangle(pos, new Vec2D(20, 40), speed) {
+			@Override
+			public boolean collide(IHitbox hitbox) {
+				for (int y = (int) getPos().getValue(1); y < getPos().getValue(1) + getSize().getValue(1); y++) {
+					if (hitbox.contain(new Vec2D((int) getPos().getValue(0), y)))
+						return true;
+				}
+
+				return false;
+			}
+		};
 		this.id = carID;
+
 	}
 
 	@Override

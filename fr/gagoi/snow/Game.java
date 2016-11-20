@@ -25,9 +25,9 @@ public class Game implements Runnable {
 			if (x % 1_000_000 == 0){
 				for (int i = 0; i < snows.size(); i++) {
 					Snow s = snows.get(i);
-					if(s.getPosY() >= 1000) {
+					if(!s.isRunning()) {
 						snows.remove(s);
-						app.remove(s);
+						app.getElements().remove(s);
 						game.remove(s);
 					}
 				}

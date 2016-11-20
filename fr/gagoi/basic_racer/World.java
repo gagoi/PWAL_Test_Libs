@@ -2,6 +2,8 @@ package fr.gagoi.basic_racer;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.Random;
 import java.util.Vector;
 
@@ -10,12 +12,20 @@ import fr.gagoi.pwal.graphics.window.GraphicElement;
 import fr.gagoi.pwal.utils.Vec2D;
 import fr.gagoi.pwal.utils.VecUtils;
 
-public class World implements AppElement, GraphicElement {
+public class World implements AppElement, GraphicElement, KeyListener {
 
-	private int height = 600;
-	private long timer, carID;
+	private int height = 600, timer;
+	private long carID;
 	private Vector<Car> cars = new Vector<>();
+	private PlayerCar p;
 	private Random r = new Random();
+	private boolean isRunning = true;
+	private boolean[] areKeysPressed = { false, false };
+	private boolean[] canMoove = { true, true };
+
+	public World(PlayerCar player) {
+		this.p = player;
+	}
 
 	@Override
 	public void render(Graphics g) {
@@ -35,56 +45,104 @@ public class World implements AppElement, GraphicElement {
 		g.setColor(Color.RED);
 		for (int i = 0; i < cars.size(); i++) {
 			Car car = cars.get(i);
-			g.fillRect((int) (49 + car.getHitbox().getPos().getValue(0) * 34),
-					(int) car.getHitbox().getPos().getValue(1), (int) car.getHitbox().getSize().getValue(0),
-					(int) car.getHitbox().getSize().getValue(1));
+			g.fillRect((int) (car.getHitbox().getPos().getValue(0)), (int) car.getHitbox().getPos().getValue(1),
+					(int) car.getHitbox().getSize().getValue(0), (int) car.getHitbox().getSize().getValue(1));
 		}
+
+		g.setColor(Color.BLUE);
+		g.fillRect((int) p.getHitbox().getPos().getValue(0), (int) p.getHitbox().getPos().getValue(1),
+				(int) p.getHitbox().getSize().getValue(0), (int) p.getHitbox().getSize().getValue(1));
 	}
 
 	@Override
 	public void update() {
-		for (int i = 0; i < cars.size(); i++) {
-			Car car = cars.get(i);
-			car.getHitbox().setPos(VecUtils.summOf(car.getHitbox().getPos(), car.getHitbox().getSpeed()));
-			if (car.getHitbox().getPos().getValue(1) >= 600) {
-				cars.remove(car);
+		if (isRunning) {
+			for (int i = 0; i < cars.size(); i++) {
+				Car car = cars.get(i);
+				if (p.getHitbox().collide(car.getHitbox())) {
+					isRunning = false;
+					return;
+				}
+				if (areKeysPressed[0] && canMoove[0]) {
+					if (p.getHitbox().getPos().getValue(0) > 49) p.getHitbox().setPos(new Vec2D(p.getHitbox().getPos().getValue(0) - 34, p.getHitbox().getPos().getValue(1)));
+				}
+				car.getHitbox().setPos(VecUtils.summOf(car.getHitbox().getPos(), car.getHitbox().getSpeed()));
+				if (car.getHitbox().getPos().getValue(1) >= 600)
+					cars.remove(car);
+
 			}
-		}
-		if (timer % (r.nextInt(50) + 125) == 0) {
-			switch (r.nextInt(6)) {
-			case 0:
-				cars.add(new Car(carID, new Vec2D(0, 0), new Vec2D(0, 1)));
-				carID++;
-				break;
-			case 1:
-				cars.add(new Car(carID, new Vec2D(1, 0), new Vec2D(0, 1)));
-				carID++;
-				break;
-			case 2:
-				cars.add(new Car(carID, new Vec2D(2, 0), new Vec2D(0, 1)));
-				carID++;
-				break;
-			case 3:
-				cars.add(new Car(carID, new Vec2D(0, 0), new Vec2D(0, 1)));
-				carID++;
-				cars.add(new Car(carID, new Vec2D(1, 0), new Vec2D(0, 1)));
-				carID++;
-				break;
-			case 4:
-				cars.add(new Car(carID, new Vec2D(0, 0), new Vec2D(0, 1)));
-				carID++;
-				cars.add(new Car(carID, new Vec2D(2, 0), new Vec2D(0, 1)));
-				carID++;
-				break;
-			case 5:
-				cars.add(new Car(carID, new Vec2D(1, 0), new Vec2D(0, 1)));
-				carID++;
-				cars.add(new Car(carID, new Vec2D(2, 0), new Vec2D(0, 1)));
-				carID++;
-				break;
+			if (timer % (r.nextInt(50) + 125) == 0) {
+				switch (r.nextInt(6)) {
+				case 0:
+					cars.add(new Car(carID, new Vec2D(49, 0), new Vec2D(0, 1)));
+					carID++;
+					break;
+				case 1:
+					cars.add(new Car(carID, new Vec2D(83, 0), new Vec2D(0, 1)));
+					carID++;
+					break;
+				case 2:
+					cars.add(new Car(carID, new Vec2D(117, 0), new Vec2D(0, 1)));
+					carID++;
+					break;
+				case 3:
+					cars.add(new Car(carID, new Vec2D(49, 0), new Vec2D(0, 1)));
+					carID++;
+					cars.add(new Car(carID, new Vec2D(83, 0), new Vec2D(0, 1)));
+					carID++;
+					break;
+				case 4:
+					cars.add(new Car(carID, new Vec2D(49, 0), new Vec2D(0, 1)));
+					carID++;
+					cars.add(new Car(carID, new Vec2D(117, 0), new Vec2D(0, 1)));
+					carID++;
+					break;
+				case 5:
+					cars.add(new Car(carID, new Vec2D(83, 0), new Vec2D(0, 1)));
+					carID++;
+					cars.add(new Car(carID, new Vec2D(117, 0), new Vec2D(0, 1)));
+					carID++;
+					break;
+				}
+				timer = 0;
 			}
-			timer = 0;
+			timer++;
+			p.increaseScore();
+		} else {
+
 		}
-		timer++;
+	}
+
+	@Override
+	public boolean isRunning() {
+		return isRunning;
+	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+		if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+			areKeysPressed[0] = true;
+			canMoove[0] = false;
+		}
+		if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+			areKeysPressed[1] = true;
+			canMoove[1] = false;
+		}
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+		if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+			areKeysPressed[0] = false;
+			canMoove[0] = true;
+		}
+		if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+			areKeysPressed[1] = false;
+			canMoove[1] = true;
+		}
 	}
 }
