@@ -37,13 +37,10 @@ public class IA implements AppElement {
 	
 	@Override
 	public void update() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public boolean isRunning() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 }

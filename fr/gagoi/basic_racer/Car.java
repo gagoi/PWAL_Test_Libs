@@ -30,4 +30,8 @@ public class Car extends EntityBase {
 		return super.toString() + "{id=" + id + "; x=" + getHitbox().getPos().getValue(0) + "; y="
 				+ getHitbox().getPos().getValue(1) + "; speed=" + getHitbox().getSpeed() + "}";
 	}
+
+	public long getId() {
+		return this.id;
+	}
 }

@@ -3,16 +3,16 @@ package fr.gagoi.basic_racer;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.util.Random;
 import java.util.Vector;
 
 import fr.gagoi.pwal.app.AppElement;
 import fr.gagoi.pwal.graphics.window.GraphicElement;
+import fr.gagoi.pwal.inputs.Keyboard;
 import fr.gagoi.pwal.utils.Vec2D;
 import fr.gagoi.pwal.utils.VecUtils;
 
-public class World implements AppElement, GraphicElement, KeyListener {
+public class World implements AppElement, GraphicElement {
 
 	private int height = 600, timer;
 	private long carID;
@@ -20,11 +20,11 @@ public class World implements AppElement, GraphicElement, KeyListener {
 	private PlayerCar p;
 	private Random r = new Random();
 	private boolean isRunning = true;
-	private boolean[] areKeysPressed = { false, false };
-	private boolean[] canMoove = { true, true };
+	private Keyboard keyboard = new Keyboard();
 
-	public World(PlayerCar player) {
+	public World(PlayerCar player, Keyboard keyboard) {
 		this.p = player;
+		this.keyboard = keyboard;
 	}
 
 	@Override
@@ -68,14 +68,12 @@ public class World implements AppElement, GraphicElement, KeyListener {
 					cars.remove(car);
 
 			}
-			
-			//System.out.println("keys: "+areKeysPressed[0]+"-"+areKeysPressed[1]);
 
-			if (areKeysPressed[0])
+			if (keyboard.isKeyPressed(37))
 				p.getHitbox().setPos(new Vec2D(49, p.getHitbox().getPos().getValue(1)));
-			else if (areKeysPressed[1])
+			else if (keyboard.isKeyPressed(39))
 				p.getHitbox().setPos(new Vec2D(117, p.getHitbox().getPos().getValue(1)));
-			else
+			else if (!(keyboard.isAlreadyKeyPressed(37) && keyboard.isKeyPressed(39)))
 				p.getHitbox().setPos(new Vec2D(83, p.getHitbox().getPos().getValue(1)));
 
 			if (timer % (r.nextInt(50) + 125) == 0) {
@@ -125,25 +123,7 @@ public class World implements AppElement, GraphicElement, KeyListener {
 		return isRunning;
 	}
 
-	@Override
-	public void keyTyped(KeyEvent e) {
-		System.out.println(e);
-	}
-
-	@Override
-	public void keyPressed(KeyEvent e) {
-		if (e.getKeyCode() == KeyEvent.VK_LEFT)
-			areKeysPressed[0] = true;
-		if (e.getKeyCode() == KeyEvent.VK_RIGHT)
-			areKeysPressed[1] = true;
-
-	}
-
-	@Override
-	public void keyReleased(KeyEvent e) {
-		if (e.getKeyCode() == KeyEvent.VK_LEFT)
-			areKeysPressed[0] = false;
-		if (e.getKeyCode() == KeyEvent.VK_RIGHT)
-			areKeysPressed[1] = false;
+	public Vector<Car> getEntities() {
+		return this.cars;
 	}
 }
