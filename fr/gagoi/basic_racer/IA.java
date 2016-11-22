@@ -1,6 +1,5 @@
 package fr.gagoi.basic_racer;
 
-import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.Vector;
 
@@ -9,11 +8,12 @@ import fr.gagoi.pwal.app.AppElement;
 
 public class IA implements AppElement {
 
-	Generation gen;
-	World[] worlds;
-	int brains = 20;
-	int inputsNum = 3;
-	int[] neurons = { 5, 7, 4, 3 };
+	private Generation gen;
+	private World[] worlds;
+	private int brains = 20;
+	private int inputsNum = 3;
+	private int[] neurons = { 5, 7, 4, 3 };
+	private boolean isRunning = true;
 
 	private int[][] inputs;
 
@@ -41,6 +41,6 @@ public class IA implements AppElement {
 
 	@Override
 	public boolean isRunning() {
-		return false;
+		return isRunning;
 	}
 }

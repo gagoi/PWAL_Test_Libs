@@ -3,7 +3,6 @@ package fr.gagoi.basic_racer;
 import fr.gagoi.pwal.app.Application;
 import fr.gagoi.pwal.graphics.window.Display;
 import fr.gagoi.pwal.graphics.window.Layer;
-import fr.gagoi.pwal.inputs.Keyboard;
 
 public class Game  {
 
