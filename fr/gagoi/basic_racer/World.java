@@ -29,7 +29,7 @@ public class World implements AppElement, GraphicElement {
 
 	@Override
 	public void render(Graphics g) {
-		g.setColor(Color.GREEN);
+		g.setColor(new Color(0x4CBB17));
 		g.fillRect(0, 0, 40, height);
 		g.fillRect(146, 0, 40, height);
 		g.setColor(Color.WHITE);
