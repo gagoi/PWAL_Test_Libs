@@ -34,6 +34,13 @@ public class IA implements AppElement {
 	@Override
 	public void update() {
 		// System.out.println("update IA");
+
+		// test le isRunning des worlds
+		for (World w : worlds) {
+
+		}
+
+		// Calculs des outputs en fonction des inputs
 		long[] ids = null;
 		Vector<Car> cars = null;
 

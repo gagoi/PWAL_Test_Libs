@@ -2,7 +2,6 @@ package fr.gagoi.basic_racer;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.event.KeyEvent;
 import java.util.Random;
 import java.util.Vector;
 
