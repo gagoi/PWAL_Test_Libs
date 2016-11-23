@@ -13,13 +13,15 @@ public class Snow implements GraphicElement, AppElement {
 	private int posX, posY, speed;
 	private boolean isRunning = true;
 	private int timer;
+	private 
+	Random r = new Random();
+	
+	private double random = r.nextDouble()*Math.PI;
 
 	public Snow() {
-		Random r = new Random();
-		posX = r.nextInt(1280);
-		int i = r.nextInt(2) + 1;
+		posX = r.nextInt(1480)-100;
 		speed = r.nextInt(3) + 1;
-		size = new int[] { i, i };
+		size = new int[] { speed-1, speed-1 };
 	}
 
 	@Override
@@ -32,6 +34,7 @@ public class Snow implements GraphicElement, AppElement {
 	public void update() {
 		if (timer % 2 == 0) {
 			posY += speed;
+			posX += speed*Math.cos(posY/150 + random);
 			if (posY >= 750) isRunning = false;
 			timer = 0;
 		}
