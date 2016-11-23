@@ -1,5 +1,6 @@
 package fr.gagoi.basic_racer;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Vector;
 
@@ -26,7 +27,7 @@ public class IA implements AppElement {
 
 		for (int i = 0; i < worlds.length; i++)
 			worlds[i] = new World(new PlayerCar(-1), new Keyboard());
-		
+
 		inputs = new double[this.gamesNum][inputsNum];
 	}
 
@@ -49,17 +50,20 @@ public class IA implements AppElement {
 					ids[i] = cars.get(i).getId();
 				}
 				Arrays.sort(ids);
-				if (ids[0] == ids[1])
-					ids = new long[] { ids[0], ids[1] };
-				else
-					ids = new long[] { ids[0] };
+				ids = new long[] { ids[0], ids[1] };
 
-				for (long id : ids)
-					for (int i = 0; i < cars.size(); i++)
-						if (id == cars.get(i).getId()){
-							// places (index)= ({49, 83, 117}-49) /34
-							inputs[w][(int) (cars.get(i).getHitbox().getPos().getValue(0) - 49) / 34] = 1;
-						}
+				ArrayList<Car> validCars = new ArrayList<Car>();
+				for (int i = 0; i < cars.size(); i++)
+					if (ids[0] == cars.get(i).getId())
+						validCars.add(cars.get(i));
+
+				for (int i = 0; i < cars.size(); i++)
+					if (cars.get(i).getHitbox().getPos().getValue(1) == validCars.get(0).getHitbox().getPos()
+							.getValue(1))
+						validCars.add(cars.get(i));
+				for (Car car : validCars)
+					// places (index)= ({49, 83, 117}-49) /34
+					inputs[w][(int) (car.getHitbox().getPos().getValue(0) - 49) / 34] = 1;
 				// calcul d'inputs done
 			} catch (Exception e) {
 				System.out.println("inputs calc exception");
@@ -68,10 +72,9 @@ public class IA implements AppElement {
 		if (inputs.length > 0)
 			outs = this.gen.compute(inputs);
 
-		for( double[] out: outs)
+		for (double[] out : outs)
 			System.out.print(out[0] + " ; ");
 		System.out.println();
-		
 
 		for (int i = 0; i < outs.length; i++) {
 			int lane = 1;
