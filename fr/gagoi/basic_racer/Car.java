@@ -10,7 +10,7 @@ public class Car extends EntityBase {
 
 	public Car(long carID, Vec2D pos, Vec2D speed) {
 		super("<Car:" + carID + ">");
-		this.hitbox = new Hitbox2D_Rectangle(pos, new Vec2D(20, 40), speed) {
+		this.hitbox = new Hitbox2D_Rectangle(pos, new Vec2D(20, 40), speed, false) {
 			@Override
 			public boolean collide(IHitbox hitbox) {
 				for (int y = (int) getPos().getValue(1); y < getPos().getValue(1) + getSize().getValue(1); y++) {

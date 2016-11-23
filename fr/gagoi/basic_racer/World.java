@@ -21,6 +21,7 @@ public class World implements AppElement, GraphicElement {
 	private Random r = new Random();
 	private boolean isRunning = true;
 	private Keyboard keyboard = new Keyboard();
+	private int lane = -1;
 
 	public World(PlayerCar player, Keyboard keyboard) {
 		this.p = player;
@@ -56,6 +57,7 @@ public class World implements AppElement, GraphicElement {
 
 	@Override
 	public void update() {
+//		System.out.println("update World");
 		if (isRunning) {
 			for (int i = 0; i < cars.size(); i++) {
 				Car car = cars.get(i);
@@ -69,11 +71,11 @@ public class World implements AppElement, GraphicElement {
 
 			}
 
-			if (keyboard.isKeyPressed(37))
+			if (keyboard.isKeyPressed(37) || lane == 0)
 				p.getHitbox().setPos(new Vec2D(49, p.getHitbox().getPos().getValue(1)));
-			else if (keyboard.isKeyPressed(39))
+			else if (keyboard.isKeyPressed(39) || lane == 2)
 				p.getHitbox().setPos(new Vec2D(117, p.getHitbox().getPos().getValue(1)));
-			else if (!(keyboard.isAlreadyKeyPressed(37) && keyboard.isKeyPressed(39)))
+			else
 				p.getHitbox().setPos(new Vec2D(83, p.getHitbox().getPos().getValue(1)));
 
 			if (timer % (r.nextInt(50) + 125) == 0) {
@@ -113,8 +115,6 @@ public class World implements AppElement, GraphicElement {
 			}
 			timer++;
 			p.increaseScore();
-		} else {
-
 		}
 	}
 
@@ -125,5 +125,9 @@ public class World implements AppElement, GraphicElement {
 
 	public Vector<Car> getEntities() {
 		return this.cars;
+	}
+
+	public void move(int lane) {
+		this.lane = lane;
 	}
 }
