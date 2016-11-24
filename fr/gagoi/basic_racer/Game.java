@@ -10,14 +10,16 @@ import fr.gagoi.pwal.graphics.window.Layer;
 
 public class Game {
 
-	private Display d = new Display("Basic Racer", 7*186, 600, 60);
+	private Display d = new Display("Basic Racer", 7 * 186, 600, 60);
 	private Application app = new Application("Basic Racer", 120);
-	private Layer game[] = { new Layer(d, 0, 0), new Layer(d, 1*186, 0), new Layer(d, 2*186, 0), new Layer(d, 3*186, 0),
-			new Layer(d, 4*186, 0), new Layer(d, 5*186, 0), new Layer(d, 6*186, 0), new Layer(d, 7*186, 0) },
-			hud[] = { new Layer(d, 0, 0), new Layer(d, 1*186, 0), new Layer(d, 2*186, 0), new Layer(d, 3*186, 0),
-					new Layer(d, 4*186, 0), new Layer(d, 5*186, 0), new Layer(d, 6*186, 0), new Layer(d, 7*186, 0) };
-					
-//	private Layer game[] = { new Layer(d,0,0)}, hud[] = {new Layer(d,0,0)};
+	private Layer game[] = { new Layer(d, 0, 0), new Layer(d, 1 * 186, 0), new Layer(d, 2 * 186, 0),
+			new Layer(d, 3 * 186, 0), new Layer(d, 4 * 186, 0), new Layer(d, 5 * 186, 0), new Layer(d, 6 * 186, 0),
+			new Layer(d, 7 * 186, 0) },
+			hud[] = { new Layer(d, 0, 0), new Layer(d, 1 * 186, 0), new Layer(d, 2 * 186, 0), new Layer(d, 3 * 186, 0),
+					new Layer(d, 4 * 186, 0), new Layer(d, 5 * 186, 0), new Layer(d, 6 * 186, 0),
+					new Layer(d, 7 * 186, 0) };
+
+	// private Layer game[] = { new Layer(d,0,0)}, hud[] = {new Layer(d,0,0)};
 	private PlayerCar player = new PlayerCar(0);
 
 	// B = Bordure, T = Ligne blanche, V = Voie;
@@ -37,14 +39,25 @@ public class Game {
 					g.setColor(Color.BLACK);
 					g.fillRect(0, 0, 200, 15);
 					g.setColor(Color.RED);
-					g.drawString("Score : " + player.getScore(), 10, 10);
+					g.drawString("Score : " + ia.getGen().getBrain(i).getScore(), 10, 10);
 				}
 			});
 		}
-		for (int i = 0; i < game.length; i++) {
-			app.add(ia.getWorlds()[i]);
-			game[i].add(ia.getWorlds()[i]);
-		}
+
 		app.add(ia);
+		while (true) {
+			if (ia.readyToReset()) {
+				for (int i = 0; i < game.length; i++) {
+					app.add(ia.getWorlds()[i]);
+					game[i].add(ia.getWorlds()[i]);
+				}
+				ia.reset();
+			}
+			
+		try{
+			Thread.sleep(50);
+		}
+		catch(Exception e){}
+		}
 	}
 }
