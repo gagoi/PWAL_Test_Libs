@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Vector;
 
+import fr.fixyneko.neuralIA.Brain;
 import fr.fixyneko.neuralIA.Generation;
 import fr.gagoi.pwal.app.AppElement;
 import fr.gagoi.pwal.inputs.Keyboard;
@@ -15,6 +16,7 @@ public class IA implements AppElement {
 	private World[] worlds;
 	private PlayerCar[] players;
 	private int gamesNum;
+	private int genNum = 0;
 
 	private int inputsNum = 3;
 	private int[] neurons = { 5, 7, 4, 3, 1 };
@@ -55,10 +57,16 @@ public class IA implements AppElement {
 					flag = true;
 
 			if (!flag) {
-				for (int s = 0; s < players.length; s++) {
-					gen.getBrain(s).setScore(players[s].getScore());
+				System.out.print("Generation    : " + gen.getBrains() + " : ");
+				for (int s = 0; s < gen.getBrains().length; s++) {
+					gen.getBrain(s).setScore(this.players[s].getScore());
+					System.out.print( this.players[s].getScore() + " vs " + gen.getBrain(s).getScore()+ " : ");
 				}
+//				System.out.println( );
+//				System.out.println(gen.getBrain(0).getScore());
+
 				gen.evolve(mutation);
+				genNum++;
 				initWorlds();
 				this.resetting = true;
 				return;
@@ -80,32 +88,35 @@ public class IA implements AppElement {
 					for (int i = 0; i < cars.size(); i++) {
 						ids[i] = cars.get(i).getId();
 					}
-					Arrays.sort(ids);
-					ids = new long[] { ids[0], ids[1] };
 
-					ArrayList<Car> validCars = new ArrayList<Car>();
-					for (int i = 0; i < cars.size(); i++)
-						if (ids[0] == cars.get(i).getId())
-							validCars.add(cars.get(i));
+					if (ids.length > 0) {
+						Arrays.sort(ids);
+						long id = ids[0];
 
-					for (int i = 0; i < cars.size(); i++)
-						if (cars.get(i).getHitbox().getPos().getValue(1) == validCars.get(0).getHitbox().getPos()
-								.getValue(1))
-							validCars.add(cars.get(i));
-					for (Car car : validCars)
-						// places (index)= ({49, 83, 117}-49) /34
-						inputs[w][(int) (car.getHitbox().getPos().getValue(0) - 49) / 34] = 1;
-					// calcul d'inputs done
+						ArrayList<Car> validCars = new ArrayList<Car>();
+						for (int i = 0; i < cars.size(); i++)
+							if (id == cars.get(i).getId())
+								validCars.add(cars.get(i));
+
+						for (int i = 0; i < ids.length; i++)
+							if (cars.get(i).getHitbox().getPos().getValue(1) == validCars.get(0).getHitbox().getPos()
+									.getValue(1))
+								validCars.add(cars.get(i));
+						for (Car car : validCars)
+							// places (index)= ({49, 83, 117}-49) /34
+							inputs[w][(int) (car.getHitbox().getPos().getValue(0) - 49) / 34] = 1;
+						// calcul d'inputs done
+					}
 				} catch (Exception e) {
-//					System.out.println("inputs calc exception");
+					e.printStackTrace();
 				}
 			}
 			if (inputs.length > 0)
 				outs = this.gen.compute(inputs);
 
-//			for (double[] out : outs)
-//				System.out.print(out[0] + " ; ");
-//			System.out.println();
+			// for (double[] out : outs)
+			// System.out.print(out[0] + " ; ");
+			// System.out.println();
 
 			for (int i = 0; i < outs.length; i++) {
 				int lane = 1;
@@ -121,7 +132,7 @@ public class IA implements AppElement {
 	public World[] getWorlds() {
 		return this.worlds;
 	}
-	
+
 	public Generation getGen() {
 		return this.gen;
 	}

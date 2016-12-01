@@ -77,7 +77,7 @@ public class World implements AppElement, GraphicElement {
 			else
 				p.getHitbox().setPos(new Vec2D(83, p.getHitbox().getPos().getValue(1)));
 
-			if (timer % (r.nextInt(50) + 125) == 0) {
+			if (timer % 150 == 0) {
 				switch (r.nextInt(6)) {
 				case 0:
 					cars.add(new Car(carID, new Vec2D(49, 0), new Vec2D(0, 1)));
