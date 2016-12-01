@@ -57,13 +57,13 @@ public class IA implements AppElement {
 					flag = true;
 
 			if (!flag) {
-				System.out.print("Generation    : " + gen.getBrains() + " : ");
+				System.out.print("Generation " + genNum + ": " + gen.getBrains() + " : ");
 				for (int s = 0; s < gen.getBrains().length; s++) {
 					gen.getBrain(s).setScore(this.players[s].getScore());
-					System.out.print( this.players[s].getScore() + " vs " + gen.getBrain(s).getScore()+ " : ");
+					System.out.print(this.players[s].getScore() + " vs " + gen.getBrain(s).getScore() + " : ");
 				}
-//				System.out.println( );
-//				System.out.println(gen.getBrain(0).getScore());
+				// System.out.println( );
+				// System.out.println(gen.getBrain(0).getScore());
 
 				gen.evolve(mutation);
 				genNum++;
